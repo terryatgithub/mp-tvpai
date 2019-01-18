@@ -1,13 +1,9 @@
 {
   "pages": [
-    "pages/fyb-index/index",
+    "pages/index/index",
     "pages/my/my",
     "pages/find/find",
-    "pages/column/column",
-    "pages/columnDetail/columnDetail",
-    "pages/search/index",
-    "pages/hot-category/index",
-    "pages/hot-detail/index"
+    "pages/search/index"
   ],
   "window": {  
     "navigationBarTextStyle": "black",
@@ -21,7 +17,7 @@
     "position": "top",
     "list": [
       {
-        "pagePath": "pages/fyb-index/index",
+        "pagePath": "pages/index/index",
         "text": "主页"
       },
       {

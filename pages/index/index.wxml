@@ -1,24 +1,65 @@
+<view class="body" bindtap='handletap'>
 
-<swiper indicator-dots="{{indicatorDots}}"
+<!-- <swiper indicator-dots="{{indicatorDots}}" class="swiperwrapper"
   autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
-  <block wx:for="{{column}}">
+  <block wx:for="{{imgUrls}}" wx:key="id">
     <swiper-item>
-     <view class="column-item" wx:for="{{column}}">{{item.text}}</view>
+      <image src="{{item}}" class="slide-image" width="355" height="150"/>
     </swiper-item>
   </block>
-</swiper>
+</swiper> -->
 
-<view class="category" wx:for="{{list}}">
-  <view class="title">{{item.title}}<navigator class="more" url="../column/column?id={{item.columnId}}">更多></navigator></view>
-  <view class="scroll_box section"> 
-      <scroll-view class="scroll-view_x" scroll-x style="width: auto;overflow:hidden;">    
-        <navigator wx:for="{{item.caseItems.listView}}" class="item_list" url="../column/column?id={{item.columnId}}">
-          <view>
-            <image src="{{item.img}}" class="item_book_img" mode="aspectFill"></image>
-            <view class="item_book_text">{{item.name}}</view>
-          </view>
-        </navigator>      
-      </scroll-view>
+<!-- <view class="section">
+  <view class="column-view">
+  <navigator class="column-item" url="../column/column?id={{item.columnId}}" wx:for="{{column}}">
+    <view>{{item.text}}</view>
+  </navigator>
+  <navigator class="column-item" url="../columnDetail/columnDetail">
+    <view>更多</view>
+  </navigator>
   </view>
 </view>
+
+<view class="section">
+  <view class="column-view">
+  <navigator class="column-item" url="../column/column?id={{item.columnId}}" wx:for="{{column}}">
+    <view>{{item.text}}</view>
+  </navigator>
+  <navigator class="column-item" url="../columnDetail/columnDetail">
+    <view>更多</view>
+  </navigator>
+  </view>
+</view>
+
+<view class="section">
+  <view class="column-view">
+  <navigator class="column-item" url="../column/column?id={{item.columnId}}" wx:for="{{column}}">
+    <view>{{item.text}}</view>
+  </navigator>
+  <navigator class="column-item" url="../columnDetail/columnDetail">
+    <view>更多</view>
+  </navigator>
+  </view>
+</view>  -->
+    
+</view>
+
+<image class="animationImg" src="{{animationImgUrl}}"></image>
+
+<view>
+  <remotecontrolnew id="remotecontrol-id" fromPage="hello"></remotecontrolnew>
+</view>
+
+<view>
+  <search></search>
+</view>
+
+<!-- 测试 -->
+<!-- <view class="modals modals-bottom-dialog" bindtap="hideModal" wx:if="{{value}}"> -->
+<!-- <view class="modals-cancel" ></view> -->
+<!-- <view class="bottom-dialog-body bottom-pos" animation="{{animationData}}"></view> -->
+<!-- </view> -->
+<!-- <button bindtap="showModal">点我</button> -->
+<!-- canvas -->
+<!-- <canvas style="width: 300px; height: 200px;" canvas-id="firstCanvas"></canvas> -->
 

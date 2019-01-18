@@ -1,187 +1,102 @@
-//index.js
-var utils = require('../../utils/util.js');
-//获取应用实例
-var app = getApp()
-
 Page({
   data: {
-    page: '1',
-    pageSize: '10',
+    imgUrls: [
+      '../../images/banner1.jpg',
+      '../../images/banner2.jpg',
+      '../../images/banner3.jpg'
+    ],
     indicatorDots: true,
-    autoplay: false,
-    interval: 5000,
+    autoplay: true,
+    interval: 10000,
     duration: 1000,
-    indicatorColor: '#ececec',
-    indicatorActiveColor: '#acacac',
     column:[
       {
-        "text":"电影",
+        "text":"test",
+        "url":"",
         "columnId":"1"
       },
       {
         "text": "电视剧",
+        "url": "",
         "columnId": "2"
       },
       {
         "text": "综艺",
+        "url": "",
         "columnId": "1"
       },
       {
         "text": "动漫",
+        "url": "",
         "columnId": "1"
       },
       {
         "text": "娱乐",
+        "url": "",
         "columnId": "1"
       },
       {
         "text": "电视剧",
+        "url": "",
         "columnId": "1"
       }, {
         "text": "电影",
-        "columnId": "1"
-      },
-      {
-        "text": "娱乐",
-        "columnId": "1"
-      },
-      {
-        "text": "电视剧",
-        "columnId": "1"
-      }, {
-        "text": "电影",
+        "url": "",
         "columnId": "1"
       }
     ],
-    list:[
-      {
-        "title": "VIP专区",
-        "typeId": "1",
-        caseItems:{
-          "listView":[
-            {
-              "img": "../../images/banner1.jpg",
-              "name": "创业时代",
-              "id": "1"
-            }, {
-              "img": "../../images/banner1.jpg",
-              "name": "创业时代",
-              "id": "2"
-            }, {
-              "img": "../../images/banner1.jpg",
-              "name": "创业时代",
-              "id": "2"
-            }, {
-              "img": "../../images/banner1.jpg",
-              "name": "创业时代",
-              "id": "2"
-            }, {
-              "img": "../../images/banner1.jpg",
-              "name": "创业时代",
-              "id": "2"
-            }
-          ]
-        }
-      }, {
-        "title": "热门电视剧",
-        "typeId": "2",
-        caseItems: {
-          "listView": [
-            {
-              "img": "../../images/banner2.jpg",
-              "name": "创业时代",
-              "id": "1"
-            }, {
-              "img": "../../images/banner2.jpg",
-              "name": "创业时代",
-              "id": "2"
-            }, {
-              "img": "../../images/banner2.jpg",
-              "name": "创业时代",
-              "id": "2"
-            }, {
-              "img": "../../images/banner2.jpg",
-              "name": "创业时代",
-              "id": "2"
-            }, {
-              "img": "../../images/banner2.jpg",
-              "name": "创业时代",
-              "id": "2"
-            }
-          ]
-        }
-      }
-    ]
-
-  },
-  // 获取一级分类
-  oneclassify: function (message) {
-    let that = this
-    const appkey = app.globalData.appkey
-    const secret = app.globalData.secret
-    const time = app.globalData.time
-    const page_index = that.data.page
-    const page_size = that.data.pageSize
-    const params = { "appkey": appkey, "page_index": page_index, "page_size": page_size, "time": time}
-    const sign = utils.encryption(params, secret)
-    const url = app.globalData.ROOTUrl + '/video/client/longvideo/oneclassify'
-    console.log("-------------"+url)
-    let data = {
-      appkey : appkey,
-      page_index: page_index,
-      page_size: page_size,
-      time: time,
-      sign : sign
-    }
-    utils.postLoading(url, 'GET', data, function (res) {
-      console.log('streams ok:')
-      console.log(res)
-      let streamsTm = that.data.streams
-      if (res.data.result) {
-        if (that.data.page == '1') {
-          streamsTm = []
-        }
-        if (parseInt(that.data.page) > res.data.data.pager.totalPage) {
-          that.setData({
-            hasMoreData: false
-          })
-          return false
-        }
-        let streams = res.data.data.list
-        if (streams.length < parseInt(that.data.pageSize)) {
-          that.setData({
-            streams: getPeriods(streamsTm.concat(streams)),
-            hasMoreData: false
-          })
-        } else {
-          that.setData({
-            streams: getPeriods(streamsTm.concat(streams)),
-            hasMoreData: true,
-            page: parseInt(that.data.page) + 1 + ''
-          })
-        }
-      } else {
-        wx.showToast({
-          title: res.data.message,
-        })
-      }
-    }, function (res) {
-      console.log('streams fail:')
-      console.log(res)
-
-      wx.showToast({
-        title: '加载数据失败',
-      })
-    }, function (res) {
-      console.log('streams complete:' + time + "；sing:" + sign)
-      console.log(res)
-    }, message)
+    animationImgList: [
+      "../../images/000.png",
+      "../../images/001.png",
+      "../../images/002.png",
+      "../../images/003.png",
+      "../../images/004.png",
+      "../../images/005.png",
+      "../../images/006.png",
+      "../../images/007.png",
+      "../../images/008.png",
+      "../../images/009.png",
+      "../../images/010.png",
+      "../../images/011.png"
+    ],
+    animationImgUrl: '',
+    // value: false, //模态框的状态 true-隐藏 false-显示
+    animationData: {}
   },
 
   onLoad(options) {
     console.log('first onLoad监听页面加载');
-    let that = this
-    that.oneclassify('')
+    wx.getSystemInfo({
+      success: (res) => {
+        // 状态栏高度和屏幕宽度，单位都是px
+        console.log(res);
+      }
+    }) 
+  },
+
+  handletap() {
+    console.log('first 触发handletap事件');
+    this.selectComponent('#remotecontrol-id').hideRemoteControl()
+    // 测试语音动效
+    // const that = this;
+    // let i = 0;
+    // setInterval(() => {  
+    //   let url = that.data.animationImgList[i]
+    //   console.log('url = ' + url + ',i = ' + i)
+    //   that.setData({animationImgUrl:url});
+    //   i++;
+    //   if(i === 12)
+    //    i = 0;
+    // }, 100)
+
+    var that = this;
+    var animation = wx.createAnimation({
+      duration: 800,//动画的持续时间 默认400ms 数值越大，动画越慢 数值越小，动画越快
+      timingFunction: 'ease',//动画的效果 默认值是linear
+    })
+
+    this.animation = animation
+    that.fadeDown();//调用隐藏动画
   },
 
   onReady() {
@@ -190,6 +105,7 @@ Page({
 
   onShow() {
     console.log('first onShow监听页面显示');
+
   },
 
   onHide() {
@@ -198,5 +114,53 @@ Page({
 
   onUnload() {
     console.log('first onUnload监听页面卸载');
+  },
+
+  // 显示遮罩层
+  showModal: function () {
+    var that = this;
+    // that.setData({
+    //   value: true
+    // })
+    var animation = wx.createAnimation({
+      duration: 600,//动画的持续时间 默认400ms 数值越大，动画越慢 数值越小，动画越快
+      timingFunction: 'ease',//动画的效果 默认值是linear
+    })
+    this.animation = animation
+    setTimeout(function () {
+      that.fadeIn();//调用显示动画
+    }, 200)
+  },
+
+  // 隐藏遮罩层
+  hideModal: function () {
+    var that = this;
+    var animation = wx.createAnimation({
+      duration: 800,//动画的持续时间 默认400ms 数值越大，动画越慢 数值越小，动画越快
+      timingFunction: 'ease',//动画的效果 默认值是linear
+    })
+
+    this.animation = animation
+    that.fadeDown();//调用隐藏动画
+    // setTimeout(function () {
+    //   that.setData({
+    //     value: false
+    //   })
+    // },720)//先执行下滑动画，再隐藏模块
+  },
+
+  //动画集
+  fadeIn: function () {
+    this.animation.translateY(0).step()
+    this.setData({
+      animationData: this.animation.export()//动画实例的export方法导出动画数据传递给组件的animation属性
+    })
+  },
+
+  fadeDown: function () {
+    this.animation.translateY(300).step()
+    this.setData({
+      animationData: this.animation.export(),
+    })
   }
 });
