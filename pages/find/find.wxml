@@ -1,5 +1,15 @@
 <!--pages/find/find.wxml-->
-<text>pages/find/find.wxml</text>
-<view>
-  <remotecontrol></remotecontrol>
+
+
+<view class="loading-warp">
+    <canvas class="canvas" canvas-id="canvasCircle"></canvas>
+    <canvas class="canvas-mask" canvas-id="canvasRing"></canvas>
+    <view class="rate">{{step}}%</view>
 </view>
+<view class="loading-tips">{{tips}}</view>
+
+
+<!-- canvas绘制时钟demo 验证ok -->
+<!-- <view class="container">
+<canvas canvas-id="clock"/>
+</view> -->

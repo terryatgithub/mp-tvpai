@@ -11,6 +11,12 @@
     "navigationBarBackgroundColor": "#f8f8f8",
     "backgroundColor": "#f8f8f8"
   },
+  "plugins": {
+    "WechatSI": {
+    "version": "0.2.2",
+    "provider": "wx069ba97219f66d99"
+    }
+  },
   "tabBar": {
     "selectedColor": "#fd614e",
     "color": "#444",

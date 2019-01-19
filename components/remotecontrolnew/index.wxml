@@ -37,21 +37,23 @@
 
   <!-- 语音输入版面 -->
   <view class="remoter-panel-wrapper" wx:if="{{indexStatus === 'VoiceInput'}}">
-    <view class="voice_input_wrapper">
-      <image class="icon-mic" src="../../images/Icons-mic.png"></image>
-    </view> 
-    <view class="tip-wrapper">
-      <text class="tip-text">{{oneTip}}</text>
+    <view class="voice-input-wrapper">
+      <canvas class="canvas" canvas-id="canvasCircle"></canvas>
+      <canvas class="canvas-mask" canvas-id="canvasRing"></canvas>
+      <view class="canvas_icon">
+        <image class="icon-mic" src="../../images/Icons-mic.png"></image>
+      </view> 
     </view>
   </view>
 
   <!-- 语音结果版面 -->
   <view class="remoter-panel-wrapper" wx:if="{{indexStatus === 'VoiceResult'}}">
-    <view class="voice_result_wrapper">
+    <view class="loading-wrapper" wx:if="{{!query}}">
       <image src="../../images/Icons-loading.png" class="icon-loading"></image>
+      <text class='loading-text'>数据处理中，请稍后</text>
     </view> 
-    <view class="tip-wrapper">
-      <text class="tip-text">{{oneTip}}</text>
+    <view class="content-wrapper" wx:if="{{query}}">
+      <text>{{query}}</text>
     </view>
   </view>
 

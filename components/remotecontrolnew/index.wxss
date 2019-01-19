@@ -14,7 +14,7 @@
 /* 遥控器面板公共样式 */
 .remoter-panel-wrapper {
   position: fixed;
-  width: 100%;
+  width: 750rpx;
   height: 908rpx;
   background-color: white;
   border-radius: 10rpx 10rpx 0 0;
@@ -167,44 +167,79 @@
 }
 
 /* 语音输入面板 */
-.voice_input_wrapper {
+.voice-input-wrapper {
+  z-index: 0;
+  position: relative;
+  margin: 100px auto 20px;
+  width: 200px;
+  height: 200px;
+}
+.canvas {
+  z-index: 1;
+  width: 200px;
+  height: 200px;
+}
+.canvas-mask {
+  z-index: 2;
   position: absolute;
-  width: 260rpx;
-  height: 260rpx;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+}
+.canvas_icon{ 
+  position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%,-50%);
+  display: flex;  
+  align-items: center;
+  justify-content: center;
+}
+.icon-mic{
+  width: 320rpx;
+  height: 320rpx;
 }
 
-.icon-mic {
-  width: 100%;
-  height: 100%;
+/* 语音结果版面 */
+.loading-wrapper {
+  position: absolute;
+  width: 450rpx;
+  height: 450rpx;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
-.tip-wrapper{
+.icon-loading {
+  width: 60rpx;
+  height: 60rpx;
+  animation: rotate 1s linear infinite;
+}
+@keyframes rotate{
+  0% {transform: rotate(0deg);}
+  50% {transform: rotate(180deg);}
+  100% {transform: rotate(360deg);}
+}
+
+.loading-text{
+  margin-top: 40rpx;
+  color: #C2C1C7;
+  font-size: 28rpx;
+}
+
+.content-wrapper {
   position: absolute;
   width: 750rpx;
-  top: 50rpx;
+  top: 150rpx;
   font-family: PingFangSC-Regular;
   font-size: 36rpx;
   color: #999999;
   letter-spacing: 0;
   text-align: center;
-}
-
-/* 语音结果版面 */
-.voice_result_wrapper {
-  position: absolute;
-  width: 150rpx;
-  height: 150rpx;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
-}
-
-.icon-loading {
-  width: 100%;
-  height: 100%;
 }
 
 /* 遥控器按钮 */
@@ -277,8 +312,3 @@
 .btn-input-status {
   background-color: #FFD71C;
 }
-
-
-
-
-

@@ -1,1 +1,49 @@
 /* pages/find/find.wxss */
+
+.loading-warp {
+  z-index: 0;
+  position: relative;
+  margin: 100px auto 20px;
+  width: 200px;
+  height: 200px;
+  background-color: #000000;
+}
+.canvas {
+  z-index: 1;
+  width: 200px;
+  height: 200px;
+}
+.canvas-mask {
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+}
+.rate {
+  z-index: 1;
+  position: absolute;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: #f0f;
+  font-size: 40rpx;
+}
+.loading-tips {
+  text-align: center;
+  font-size: 40rpx;
+  font-weight: 400;
+  color: #ff0000;
+}
+
+/* canvas绘制时钟demo 验证ok */
+/* .container {
+  height: 100%;
+  width: 100%;
+}
+canvas {
+  height: 100%;
+  width: 100%;
+} */

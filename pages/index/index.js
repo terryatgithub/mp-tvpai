@@ -99,21 +99,24 @@ Page({
     that.fadeDown();//调用隐藏动画
   },
 
+  onLoad() {
+    console.log('homepage onLoad()');
+  },
+
   onReady() {
-    console.log('first onReady监听页面初次渲染完成');
+    console.log('homepage onReady()');
   },
 
   onShow() {
-    console.log('first onShow监听页面显示');
-
+    console.log('homepage onShow()');
   },
 
   onHide() {
-    console.log('first onHide监听页面隐藏');
+    console.log('homepage onHide()');
   },
 
   onUnload() {
-    console.log('first onUnload监听页面卸载');
+    console.log('homepage onUnload()');
   },
 
   // 显示遮罩层

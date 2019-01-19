@@ -18,29 +18,7 @@
     <view>更多</view>
   </navigator>
   </view>
-</view>
-
-<view class="section">
-  <view class="column-view">
-  <navigator class="column-item" url="../column/column?id={{item.columnId}}" wx:for="{{column}}">
-    <view>{{item.text}}</view>
-  </navigator>
-  <navigator class="column-item" url="../columnDetail/columnDetail">
-    <view>更多</view>
-  </navigator>
-  </view>
-</view>
-
-<view class="section">
-  <view class="column-view">
-  <navigator class="column-item" url="../column/column?id={{item.columnId}}" wx:for="{{column}}">
-    <view>{{item.text}}</view>
-  </navigator>
-  <navigator class="column-item" url="../columnDetail/columnDetail">
-    <view>更多</view>
-  </navigator>
-  </view>
-</view>  -->
+</view> -->
     
 </view>
 
