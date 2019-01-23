@@ -6,7 +6,6 @@
   margin: 100px auto 20px;
   width: 200px;
   height: 200px;
-  background-color: #000000;
 }
 .canvas {
   z-index: 1;
@@ -28,14 +27,14 @@
   left: 0;
   width: 100%;
   text-align: center;
-  color: #f0f;
+  color: #000;
   font-size: 40rpx;
 }
 .loading-tips {
   text-align: center;
   font-size: 40rpx;
   font-weight: 400;
-  color: #ff0000;
+  color: #000;
 }
 
 /* canvas绘制时钟demo 验证ok */

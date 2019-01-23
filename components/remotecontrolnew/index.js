@@ -1,6 +1,7 @@
 // 腾讯语音解析插件
 let plugin = requirePlugin("WechatSI")
 let manager = plugin.getRecordRecognitionManager()
+const njApi = require('../../utils/api_nj.js')
 
 Component({
   options: {
@@ -10,6 +11,7 @@ Component({
     fromPage: String // 属性值可以在组件使用时指定
   },
   data: {
+    activeid: '49901813',
     btnContent: '遥控器', 
     tipsContent: '提示：长按遥控器按钮，就能语音啦',
     query: '',
@@ -67,10 +69,10 @@ Component({
         case 'shutdown':
           this.setData({ isShutdownFocus: true })
           break
-        case 'voldown':
+        case 'volume_minus':
           this.setData({ isVoldownFocus: true })
           break
-        case 'volup':
+        case 'volume_plus':
           this.setData({ isVolupFocus: true })
           break
         case 'up':
@@ -108,10 +110,10 @@ Component({
         case 'shutdown':
           this.setData({ isShutdownFocus: false })
           break
-        case 'voldown':
+        case 'volume_minus':
           this.setData({ isVoldownFocus: false })
           break
-        case 'volup':
+        case 'volume_plus':
           this.setData({ isVolupFocus: false })
           break
         case 'up':
@@ -121,6 +123,17 @@ Component({
           this.setData({ curDirectorImg: '../../images/director-normal.png' })
           break
       }
+      console.log('activeid:' + this.data.activeid + ',action:' + curId)
+      const data = {
+        activeid: this.data.activeid,
+        action: curId
+      }
+      njApi.pushController({
+        data: data,
+        success: function (res) {
+          console.log('pushController done!',res)
+        }
+      })
     },
 
     // 处理遮罩层点击事件,等待语音解析过程不处理该事件
@@ -144,52 +157,57 @@ Component({
     handleRecorderManagerStop(event) {
       const that = this;
       console.log('手指松开, 是否等待语音结果: ' + this.data.waitVoiceResult + ",是否为长按状态: " + this.data.longtapStatus);
-      if (!this.data.waitVoiceResult) { //当处理语音过程中，不处理任何事件
-        if (this.data.longtapStatus) { //当长按时手指松开，设置按钮样式，显示语音结果版面
-          console.log('处理长按手指松开，停止录音，停止超时倒计时，等待解析结果');
-          clearTimeout(this.limitTimer)
-          manager.stop() 
-          this.setData({
-            indexStatus: 'VoiceResult',
-            voiceInputStatus: false,
-            waitVoiceResult: true, //等待语音结果
-            curBtnImg: '../../images/remoter@3x.png',
-            btnContent: '遥控器'          
-          })
-          //等待5S，模拟语音处理，然后重置参数
-          // setTimeout(() => {
-          //   that.setData({
-          //     indexStatus: '',
-          //     longtapStatus: false,
-          //     waitVoiceResult: false,
-          //     isShowMask: false,
-          //     query: ''
-          //   })
-          // }, 5000)
-        } else { //当短按手指松开，显示遥控版面
-          console.log('处理短按手指松开');
-          if (this.data.isShowMask) {
+      
+      try {
+        //当处理语音过程中，不处理任何事件, 注意不能直接返回，需处理第一次情况
+        if (!this.data.waitVoiceResult) {
+          if (this.data.longtapStatus) { //当长按时手指松开，设置按钮样式，显示语音结果版面
+            console.log('处理长按手指松开，停止录音，停止超时倒计时，停止录音动画，等待解析结果');
+            this.stopRecordTimer()
+            this.stopRecordAnimation()
+            this.stopRecord()
             this.setData({
-              // indexStatus: '',
-              isShowMask: false,
+              indexStatus: 'VoiceResult',
+              voiceInputStatus: false,
+              waitVoiceResult: true, //等待语音结果
               curBtnImg: '../../images/remoter@3x.png',
-              btnContent: '遥控器'
+              btnContent: '遥控器'          
             })
-            this.setData({
-              
-             })
-            this.showExitAnimation()
-          } else {
-            // wx.hideTabBar({});
-            this.setData({
-              indexStatus: 'RemoteControl',
-              isShowMask: true,
-              curBtnImg: '../../images/voice@3x.png',
-              btnContent: '按住说话'
-            })
-            this.showEnterAnimaiton()
+            //等待5S，模拟语音处理，然后重置参数
+            // setTimeout(() => {
+            //   that.setData({
+            //     indexStatus: '',
+            //     longtapStatus: false,
+            //     waitVoiceResult: false,
+            //     isShowMask: false,
+            //     query: ''
+            //   })
+            // }, 5000)
+          } else { //当短按手指松开，显示遥控版面
+            console.log('处理短按手指松开');
+            if (this.data.isShowMask) {
+              this.setData({
+                // indexStatus: '',
+                isShowMask: false,
+                curBtnImg: '../../images/remoter@3x.png',
+                btnContent: '遥控器'
+              })
+              this.showExitAnimation()
+            } else {
+              // wx.hideTabBar({});
+              this.setData({
+                indexStatus: 'RemoteControl',
+                isShowMask: true,
+                curBtnImg: '../../images/voice@3x.png',
+                btnContent: '按住说话'
+              })
+              this.showEnterAnimaiton()
+            }
           }
         }
+      }
+      catch (err) {
+        console.log('handleRecorderManagerStop catch err ', err);
       }
     },
 
@@ -204,20 +222,21 @@ Component({
         btnContent: '松开结束',
         longtapStatus: true
       })
-
-      this.showVoiceInputAnimation();
-      
+      console.log('开始执行语音输入动画');
+      this.startRecordAnimation();
       console.log('开始录音，并倒计时');
       this.startRecord()
-      this.handleRecordTimeout()
-
-      console.log('开始执行动画效果');
+      // this.startRecordTimer()
+      // 开始执行进场动画
       this.showEnterAnimaiton()
     },
 
     //处理录音流程，目前仅使用腾讯方案，百度方案后续补充
     startRecord() {
       this.handleTencentRecorder()
+    },
+    stopRecord() {
+      manager.stop();
     },
 
     handleTencentRecorder() {
@@ -245,6 +264,18 @@ Component({
           that.setData({
             query: res.result,
           })
+          // 推送文本
+          const data = {
+            activeid: that.data.activeid,
+            text: res.result
+          }
+          njApi.pushText({
+            data: data,
+            success(res) {
+              // 文本推送成功；
+              console.log('pushText done!',res)
+            }
+          })
           // 2s后回到主页面
           setTimeout(() => {
             that.setData({
@@ -267,20 +298,29 @@ Component({
           icon: 'none',
           duration: 1000,
         })
+        // 2s后回到主页面
+        setTimeout(() => {
+          that.setData({
+            indexStatus: '',
+            longtapStatus: false,
+            waitVoiceResult: false,
+            isShowMask: false,
+            query: ''
+          })
+        }, 2000)
       }
       manager.start({ duration: 10000, lang: "zh_CN" }) // 这里超时会回调onstop
     },
 
-    handleRecordTimeout() {
+    startRecordTimer() {
       this.limitTimer = setTimeout(() => {
         console.log('输入语音时间过长，超时')
-        // manager.stop();
-        // wx.showToast({
-        //   title: '超时，请再说一遍',
-        //   icon: 'none',
-        //   duration: 1000,
-        // });
       }, 10000)
+    },
+    stopRecordTimer() {
+      if(this.limitTimer) {
+        clearInterval(this.limitTimer)
+      }
     },
 
     // 动画相关的方法
@@ -291,7 +331,6 @@ Component({
       this.animation = animation
       this.fadeIn();
     },
-
     showExitAnimation() {
       let animation = wx.createAnimation({
         duration: 200
@@ -313,8 +352,12 @@ Component({
         animationData: this.animation.export(),
       })
     },
-
-    showVoiceInputAnimation() {
+    stopRecordAnimation() {
+      if (this.interval) {
+        clearInterval(this.interval);
+      }
+    },
+    startRecordAnimation() {
       var me = this;
       var cxt = wx.createCanvasContext('canvasCircle',this);
       cxt.setLineWidth(6);
@@ -329,19 +372,16 @@ Component({
       function drawing (s, e) {
           var cxt2 = wx.createCanvasContext('canvasRing',me);
           cxt2.setLineWidth(6);
-        cxt2.setStrokeStyle('#FFD71C');// 动态圆的颜色
+          cxt2.setStrokeStyle('#FFD71C');// 动态圆的颜色
           cxt2.setLineCap('round');
           cxt2.beginPath();
           cxt2.arc(100, 100, 96, s, e, false);
           cxt2.stroke();
           cxt2.draw();
       }
-      function drawLoading (){
+      function drawLoading () {
           if(steps < 101){
               //这里用me,同步数据,渲染页面
-              me.setData({
-                  step: steps
-              })
               endAngle = steps * 2 * Math.PI / speed + startAngle;
               drawing(startAngle, endAngle);
               steps++;

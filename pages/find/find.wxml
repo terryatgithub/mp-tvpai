@@ -8,7 +8,9 @@
 </view>
 <view class="loading-tips">{{tips}}</view>
 
-
+<view> 
+  <remotecontrol></remotecontrol>
+</view>
 <!-- canvas绘制时钟demo 验证ok -->
 <!-- <view class="container">
 <canvas canvas-id="clock"/>

@@ -98,13 +98,13 @@ class Api {
    * 遥控器指令
    */
   pushController(options) {
-    this._post(this.host + 'mp/pushController', options.data, options.success, options.fail)
+    this._post(this.host + 'wxVip/pushController', options.data, options.success, options.fail)
   }
   /**
    * 推送文本
    */
   pushText(options) {
-    this._post(this.host + 'mp/pushText', options.data, options.success, options.fail)
+    this._post(this.host + 'wxVip/pushText', options.data, options.success, options.fail)
   }
   /**
    * 从后台动态获取提示信息

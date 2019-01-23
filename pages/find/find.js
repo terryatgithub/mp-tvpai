@@ -10,7 +10,7 @@ Page({
         var me = this;
         var cxt = wx.createCanvasContext('canvasCircle');
         cxt.setLineWidth(6);
-        cxt.setStrokeStyle('#ff0000'); //圆的颜色
+        cxt.setStrokeStyle('#eeeeee'); //圆的颜色
         cxt.setLineCap('round');
         cxt.beginPath();
         cxt.arc(100, 100, 96, 0, 2 * Math.PI, false);
@@ -21,7 +21,7 @@ Page({
         function drawing (s, e) {
             var context = wx.createCanvasContext('canvasRing');
             context.setLineWidth(6);
-            context.setStrokeStyle('#00ffff');// 动态圆的颜色
+            context.setStrokeStyle('#FFD71C');// 动态圆的颜色
             context.setLineCap('round');
             context.beginPath();
             context.arc(100, 100, 96, s, e, false);
