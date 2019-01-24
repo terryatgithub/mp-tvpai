@@ -1,7 +1,8 @@
 // 腾讯语音解析插件
 let plugin = requirePlugin("WechatSI")
 let manager = plugin.getRecordRecognitionManager()
-const njApi = require('../../utils/api_nj.js')
+const njApi = require('../../utils/api_nj')
+const authApi = require('../../utils/api_auth')
 
 Component({
   options: {
@@ -11,12 +12,13 @@ Component({
     fromPage: String // 属性值可以在组件使用时指定
   },
   data: {
-    activeid: '49901813',
+    activeid: '23320005',
     btnContent: '遥控器', 
     tipsContent: '提示：长按遥控器按钮，就能语音啦',
     query: '',
     isShowTips: true,
     isShowMask: false, // 是否显示遮罩层
+    hasRecordAuth: null, //是否有录音权限
     // 遥控按键落焦标识
     isOKFocus: false,
     isShutdownFocus: false,
@@ -213,7 +215,86 @@ Component({
 
     // 遥控器按钮长按事件
     handleButtonLongTap(event) {
-      console.log('触发遥控器按钮长按事件');
+      console.log('触发遥控器按钮长按事件')
+      if (this.data.hasRecordAuth){
+        console.log('已经有录音权限');
+        this.startRecord();
+        return;
+      }
+      console.log('没有录音权限，引导用户进行授权')
+      let that = this;
+      authApi.checkRecordPriority({
+        success: (hasPriority) => {
+          console.log('checkPriorityCallback ', hasPriority);
+          if (!hasPriority) {
+            wx.authorize({
+              scope: 'scope.record',
+              success:() => {
+                // 用户已经同意小程序使用录音功能，后续调用 wx.startRecord 接口不会弹窗询问
+                console.log('录音授权成功')
+                that.setData({
+                  hasRecordAuth: true
+                });
+                return
+              },
+              fail: (res)=> {
+                console.log('录音授权失败', res);
+                that.setData({
+                  hasRecordAuth: false
+                });
+                if(res.errCode=='-12006') {
+                  console.log('显示模态授权框')
+                  wx.showModal({
+                    title: '授权提示',
+                    content: '语音遥控需要小程序录音权限',
+                    cancelText: '取消',
+                    confirmText: '确定',
+                    comfirmColor: '#21c0ae',
+                    success: function(res) {
+                      console.log('showModal success，执行wx.openSetting', res)
+                      if (res.confirm) {
+                        wx.openSetting({
+                          success: (res)=>{
+                            console.log('openSetting success',res);
+                          },
+                          fail: (res) => {
+                            console.log('openSetting fail', res);
+                          },
+                          complete: (res) => {
+                            console.log('openSetting complete', res);
+                          }
+                        })
+                      } else{
+                        console.log('showModal cancel')
+                      }
+                    },
+                    fail: function(res) {
+                      console.log('showModal fail',res)
+                    }
+                  })
+                } else {
+                  // 申请录音权限失败
+                  wx.showToast({
+                    title: '语音遥控需要小程序录音权限',
+                    icon: 'none',
+                    duration: 2000,
+                  })
+                }
+              }
+            })
+          } else {
+            that.setData({
+              hasRecordAuth: true
+            });
+            that.startRecord();
+          }
+        }
+      })
+    },
+
+    //处理录音流程，目前仅使用腾讯方案，百度方案后续补充
+    startRecord() {
+      // 显示语音输入版面，设置相关状态
       this.setData({
         indexStatus: 'VoiceInput',
         voiceInputStatus: true,
@@ -222,17 +303,11 @@ Component({
         btnContent: '松开结束',
         longtapStatus: true
       })
-      console.log('开始执行语音输入动画');
-      this.startRecordAnimation();
-      console.log('开始录音，并倒计时');
-      this.startRecord()
-      // this.startRecordTimer()
-      // 开始执行进场动画
+      console.log('开始执行语音输入动画和版面进场动画');
+      this.startRecordAnimation();   
       this.showEnterAnimaiton()
-    },
-
-    //处理录音流程，目前仅使用腾讯方案，百度方案后续补充
-    startRecord() {
+      console.log('开始录音，并倒计时');
+      // this.startRecordTimer()
       this.handleTencentRecorder()
     },
     stopRecord() {
@@ -253,9 +328,13 @@ Component({
             duration: 1000,
           })
           that.setData({
+            curBtnImg: '../../images/remoter@3x.png',
+            btnContent: '遥控器',
+            voiceInputStatus: false,
             indexStatus: '',
             longtapStatus: false,
             waitVoiceResult: false,
+
             isShowMask: false,
             query: ''
           })
@@ -279,6 +358,9 @@ Component({
           // 2s后回到主页面
           setTimeout(() => {
             that.setData({
+              curBtnImg: '../../images/remoter@3x.png',
+              btnContent: '遥控器',
+              voiceInputStatus: false,
               indexStatus: '',
               longtapStatus: false,
               waitVoiceResult: false,
@@ -404,6 +486,16 @@ Component({
   // 组件挂载后执行
   ready() {
     console.log('remotecontrol component ready()')
+    if (this.data.hasRecordAuth == null) {
+      authApi.checkRecordPriority({
+        success: (hasPriority) => {
+          console.log('ready(),checkRecordPriority hasPriority=' + hasPriority)
+          this.setData({
+            hasRecordAuth: hasPriority
+          })
+        }
+      })
+    }
   },
   // 组件移动的时候执行
   moved() {
